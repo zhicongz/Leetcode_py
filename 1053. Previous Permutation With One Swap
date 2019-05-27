@@ -1,0 +1,16 @@
+class Solution:
+    def prevPermOpt1(self, A: List[int]) -> List[int]:
+        d = {A[len(A)-1]:len(A)-1}
+        for i in range(len(A)-2,-1,-1):
+            d[A[i]] = i
+            if A[i] > A[i+1]:
+                left = i
+                break
+        else:
+            return(A)
+        
+        right = d[max(i for i in d if i < A[left])]
+        
+        A[right],A[left] = A[left],A[right]
+        
+        return(A)
