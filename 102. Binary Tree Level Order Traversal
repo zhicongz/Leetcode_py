@@ -1,0 +1,22 @@
+class Solution:
+    def levelOrder(self, root: TreeNode) -> List[List[int]]:
+        if not root:
+            return([])
+        
+        ans = []
+        v = [root]
+        
+        while v:
+            q = []
+            temp = []
+            for i in v:
+                temp.append(i.val)
+                if i.left:                   
+                    q.append(i.left)
+                if i.right:
+                    q.append(i.right)
+            v = q
+            ans.extend([temp])
+            
+        return(ans)
+        
