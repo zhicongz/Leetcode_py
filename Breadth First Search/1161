@@ -1,0 +1,23 @@
+class Solution:
+    def maxLevelSum(self, root: TreeNode) -> int:
+        if not root:
+            return(1)
+        
+        res = []
+        # bfs
+        temp = [root]
+        
+        while temp:
+            q = []
+            cnt = 0
+            for item in temp:
+                cnt += item.val
+                if item.right:
+                    q.append(item.right)
+                if item.left:
+                    q.append(item.left)
+        
+            res.append(cnt)
+            temp = q
+            
+        return([i for (i,x) in enumerate(res) if x==max(res)][0]+1)
