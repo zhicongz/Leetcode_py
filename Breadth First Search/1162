@@ -1,0 +1,36 @@
+class Solution:
+    def maxDistance(self, grid: List[List[int]]) -> int:
+        # BFS
+        water = set()
+        land  = set()
+        
+        for i in range(len(grid)):
+            for j in range(len(grid[0])):
+                if grid[i][j]==0:
+                    water.add((i,j))
+                else:
+                    land.add((i,j))
+        
+        if not water or not land:
+            return(-1)
+            
+        res = 0
+        cur = set()
+        while water:
+            for (i,j) in land:
+                if (i+1,j) in water:
+                    water.remove((i+1,j))
+                    cur.add((i+1,j))
+                if (i-1,j) in water:
+                    water.remove((i-1,j))
+                    cur.add((i-1,j))
+                if (i,j-1) in water:
+                    water.remove((i,j-1))
+                    cur.add((i,j-1))
+                if (i,j+1) in water:
+                    water.remove((i,j+1))
+                    cur.add((i,j+1))
+            res += 1
+            land = land.union(cur)
+        
+        return(res)
