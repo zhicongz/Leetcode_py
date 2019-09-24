@@ -1,0 +1,33 @@
+class Solution:
+    def nthUglyNumber(self, n: int, a: int, b: int, c: int) -> int:
+        '''
+        Euclidean algorithm for finding gcd. If c is gcd of a and b, than c should be a factor of a%b when a%b not zero.
+        '''
+        def gcd(a,b):
+            a,b = max(a,b),min(a,b)
+            c = a%b
+            if c==0:
+                return b
+            else:
+                return gcd(b,c)
+        
+        ab = a*b//gcd(a,b)
+        ac = a*c//gcd(a,c)
+        bc = b*c//gcd(b,c)
+        abc = ab*c//gcd(ab,c)
+        
+        def foo(N):
+            return N//a+N//b+N//c-(N//ab+N//ac+N//bc)+N//abc
+        
+        
+        lb = n
+        ub = 2*10**9
+        
+        while (lb < ub):
+            temp = (lb+ub)//2
+            if foo(temp)>=n:
+                ub = temp
+            else:
+                lb = temp+1
+        
+        return(lb)
