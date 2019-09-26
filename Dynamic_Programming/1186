@@ -1,0 +1,13 @@
+class Solution:
+    def maximumSum(self, arr: List[int]) -> int:
+        n = len(arr)
+        dp_0 = [-float("Inf")]*(n+1) # sum for contiguous elements
+        dp_1 = [-float("Inf")]*(n+1) # sum for at most one leave
+
+        for i in range(n):
+            dp_0[i+1] = max(dp_0[i]+arr[i],arr[i])
+            dp_1[i+1] = max(dp_0[i+1],dp_1[i]+arr[i],dp_0[i])
+            '''
+            maximum of sum of all elements, leave one for previous elements, leave current element
+            '''
+        return(max(dp_1))
