@@ -1,0 +1,22 @@
+class Solution:
+    def getMaximumGold(self, grid: List[List[int]]) -> int:
+        cand = set()
+        m,n = len(grid), len(grid[0])
+        
+        for i in range(m):
+            for j in range(n):
+                if grid[i][j] != 0:
+                    cand.add((i,j))
+        self.res = 0
+        for (i,j) in cand:
+
+            def dfs(x,y,cnt,seen):
+                if (x,y) in cand and (x,y) not in seen:
+                    cnt += grid[x][y]
+                    self.res = max(self.res, cnt)
+                    for (a,b) in ((x+1,y),(x-1,y),(x,y+1),(x,y-1)):
+                        dfs(a,b,cnt,seen|{(x,y)})
+                        
+            dfs(i,j,0,set())
+
+        return(self.res)
