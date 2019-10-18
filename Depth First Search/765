@@ -1,0 +1,27 @@
+# couple circle. Each circle need `n-1` times of switching where `n` is the circle size.
+```
+class Solution:
+    def minSwapsCouples(self, row: List[int]) -> int:
+        n = len(row)//2
+        seen = set()
+        
+        l = {}
+        for i in range(n):
+            l[row[2*i]] = row[2*i+1]
+            l[row[2*i+1]] = row[2*i]
+        
+        def dfs(i):
+            if i not in seen:
+                seen.add(i)
+                for j in [2*i,2*i+1]:
+                    dfs(l[j]//2)
+
+        
+        cnt = 0
+        for i in range(n):
+            if i not in seen:
+                cnt += 1
+                dfs(i)
+        
+        return(n-cnt)
+```
