@@ -1,0 +1,32 @@
+1245. Tree Diameter
+
+Given an undirected tree, return its diameter: the number of edges in a longest path in that tree.
+
+The tree is given as an array of edges where edges[i] = [u, v] is a bidirectional edge between nodes u and v.
+Each node has labels in the set {0, 1, ..., edges.length}.
+
+solution from awice
+```
+class Solution:
+    def treeDiameter(self, edges: List[List[int]]) -> int:
+        n = len(edges)+1
+        conn = collections.defaultdict(list)
+        for edge in edges:
+            conn[edge[0]].append(edge[1])
+            conn[edge[1]].append(edge[0])
+
+        def bfs(pt):
+            stack = collections.deque([[pt,0]])
+            seen = {pt}
+            while stack:
+                cur,cnt = stack.popleft()
+                for i in conn[cur]:
+                    if i not in seen:
+                        seen.add(i)
+                        stack.append([i,cnt+1])
+            return(cur,cnt)
+        
+        pt,cnt = bfs(0)
+        pt,cnt = bfs(pt)
+        return(cnt)
+```
