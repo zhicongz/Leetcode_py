@@ -1,0 +1,55 @@
+1258. Synonymous Sentences
+
+Given a list of pairs of equivalent words synonyms and a sentence text, Return all possible synonymous sentences sorted lexicographically.
+
+Example 1:
+
+Input:
+synonyms = [["happy","joy"],["sad","sorrow"],["joy","cheerful"]],
+text = "I am happy today but was sad yesterday"
+Output:
+["I am cheerful today but was sad yesterday",
+​​​​​​​"I am cheerful today but was sorrow yesterday",
+"I am happy today but was sad yesterday",
+"I am happy today but was sorrow yesterday",
+"I am joy today but was sad yesterday",
+"I am joy today but was sorrow yesterday"]
+
+
+
+class Solution:
+    def generateSentences(self, synonyms: List[List[str]], text: str) -> List[str]:
+        # union find
+        def find(a):
+            while d[a]!=d[d[a]]:
+                d[a] = d[d[a]]
+                a = d[a]
+            return(a)            
+            
+        d = {}
+
+        for sy in synonyms:
+            d[sy[0]] = sy[0]
+            d[sy[1]] = sy[1]
+
+            
+        for sy in synonyms:
+            rt_a = d[sy[0]]
+            rt_b = d[sy[1]]
+            d[sy[1]] = rt_a
+        
+        text = text.split()
+        res = [text]   
+
+        for (i,word) in enumerate(text):
+            temp = []
+            if word in d:
+                word_root = d[word]
+                for (key,val) in d.items():
+                    if val == word_root and key != word:              
+                        for ele in res:
+                            temp.append(ele[:i]+[key]+ele[i+1:])
+            res.extend(temp)
+                        
+        res = [" ".join(i) for i in res]
+        return(sorted(res))
