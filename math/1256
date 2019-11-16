@@ -1,0 +1,31 @@
+1256. Encode Number
+
+Given a non-negative integer num, Return its encoding string.
+
+The encoding is done by converting the integer to a string using a secret function that you should deduce from the following table:
+
+f(0) = ''
+f(1) = '0'
+f(2) = '1'
+f(3) = '00'
+f(4) = '01'
+f(5) = '10'
+f(6) = '11'
+f(7) = '000'
+
+Example 1:
+Input: num = 23
+Output: "1000"
+
+Example 2:
+Input: num = 107
+Output: "101100"
+
+```
+class Solution:
+    def encode(self, num: int) -> str:      
+        if num==0:
+            return('')
+        res = bin(num+1)
+        return(res[3:])
+```
