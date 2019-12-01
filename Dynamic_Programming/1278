@@ -1,0 +1,31 @@
+```
+class Solution:
+    def palindromePartition(self, s: str, k: int) -> int:
+        n = len(s)
+        dp = {}
+        
+        for j in range(n):
+            for i in range(j+1):
+                if i == j:
+                    dp[(i,j)] = 0
+                else:
+                    if j==i+1:
+                        dp[(i,j)] = 0 if s[i] == s[j] else 1
+                    else:
+                        temp = dp.get((i+1,j-1),0)
+                        dp[(i,j)] = temp if s[i] == s[j] else temp + 1
+        
+        
+        stack = [dp[(0,i)] for i in range(n)]
+
+        for _ in range(1,k):
+            for i in range(n-1,0,-1):
+                stack[i] = min(stack[j]+dp[(j+1,i)] for j in range(i) or [0])
+
+            
+        return(stack[-1])
+```
+substring palindrome. 
+First `dp` records number of letters need to change in `s[i:j+1]` to make a palindrome.
+`stack` is minimum number of changes in k partition. 
+Complexity O(n^2*k)
