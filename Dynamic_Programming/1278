@@ -27,5 +27,5 @@ class Solution:
 ```
 substring palindrome. 
 First `dp` records number of letters need to change in `s[i:j+1]` to make a palindrome.
-`stack` is minimum number of changes in k partition. 
+`stack[i]` is minimum number of changes in k partition in the first ith letters. 
 Complexity O(n^2*k)
