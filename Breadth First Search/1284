@@ -1,0 +1,44 @@
+```
+class Solution:
+    def minFlips(self, mat: List[List[int]]) -> int:
+        m,n = len(mat), len(mat[0])
+        
+        if sum(mat[i][j] for i in range(m) for j in range(n))==0: return(0)
+        
+        seen = set()
+        cnt = 0
+        
+        temp = ()
+        for i in range(m):
+            temp += tuple(mat[i])
+        
+        stack = [temp]
+        
+        while stack:
+            cnt += 1
+            next_stack = []
+            while stack:
+                cur = stack.pop(0)
+
+                if cur not in seen:
+                    seen.add(cur)
+                    for i in range(m):
+                         for j in range(n):
+                            # flip [i,j]
+                            lst = list(cur)
+                            for (x,y) in {(i,j),(i+1,j),(i-1,j),(i,j-1),(i,j+1)}:
+                                if 0<=x<m and 0<=y<n:
+                                    index = x*n+y
+                                    lst[index] = 1 - lst[index]
+                            b = tuple(lst)        
+
+                            if sum(b) == 0: return(cnt)
+                            next_stack.append(b)
+                       
+            stack = next_stack
+            
+        
+        return(-1)
+```
+
+            
