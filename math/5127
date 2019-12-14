@@ -1,0 +1,39 @@
+5127. Remove Covered Intervals
+
+Given a list of intervals, remove all intervals that are covered by another interval in the list. Interval [a,b) is covered by interval [c,d) if and only if c <= a and b <= d.
+
+After doing so, return the number of remaining intervals.
+
+Ex:
+Input: intervals = [[1,4],[3,6],[2,8]]
+Output: 2
+Explanation: Interval [3,6] is covered by [2,8], therefore it is removed.
+
+```{My}
+class Solution:
+    def removeCoveredIntervals(self, intervals: List[List[int]]) -> int:
+        
+        intervals = sorted(intervals, key = lambda x:x[0])
+        
+        cnt = 0
+        
+        max_rb = -1
+        
+        for interval in intervals:
+            if max_rb < interval[1]:
+                max_rb = interval[1]
+                cnt += 1
+        
+        return(cnt)
+```
+
+```{Lee's}
+    def removeCoveredIntervals(self, A):
+        res = right = 0
+        for i, j in sorted(A, key=lambda a: [a[0], -a[1]]):
+            res += j > right
+            right = max(right, j)
+        return res
+```
+
+My solution has a bug that I forget to sort by -a[-1]
