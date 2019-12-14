@@ -1,0 +1,64 @@
+5123. Iterator for Combination
+
+Design an Iterator class, which has:
+
+A constructor that takes a string characters of sorted distinct lowercase English letters and a number combinationLength as arguments.
+A function next() that returns the next combination of length combinationLength in lexicographical order.
+A function hasNext() that returns True if and only if there exists a next combination.
+
+Example:
+CombinationIterator iterator = new CombinationIterator("abc", 2); // creates the iterator.
+
+iterator.next(); // returns "ab"
+iterator.hasNext(); // returns true
+iterator.next(); // returns "ac"
+iterator.hasNext(); // returns true
+iterator.next(); // returns "bc"
+iterator.hasNext(); // returns false
+
+```{my soluation}
+class CombinationIterator:
+
+    def __init__(self, characters: str, combinationLength: int):
+        self.cur = []
+        self.chara = characters
+        self.l = combinationLength
+        self.n = len(characters)
+    def next(self) -> str:
+        n = self.n
+        if not self.cur:
+            self.cur = list(range(self.l))
+        else:
+            temp = self.cur + [n]
+            for i in range(self.l-1,-1,-1):
+                if temp[i+1] - temp[i] > 1:
+                    self.cur[i:] = list(range(self.cur[i]+1,self.l-i+self.cur[i]+1))
+                    break
+            
+        res = [self.chara[i] for i in self.cur]
+        return("".join(res))
+        
+
+    def hasNext(self) -> bool:
+        n = self.n
+        if self.cur != list(range(n-self.l, n)):
+            return(True)
+        else:
+            return(False)
+
+```
+
+```{Lee's soluation}
+class CombinationIterator(object):
+
+    def __init__(self, A, k):
+        self.it = itertools.combinations(A, k)
+        self.last = A[-k:]
+        self.hasNext = lambda: True
+
+    def next(self):
+        res = ''.join(self.it.next())
+        self.hasNext = lambda: res != self.last
+        return res
+```
+
