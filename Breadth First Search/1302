@@ -1,0 +1,31 @@
+Deepest Leaves Sum
+
+Given a binary tree, return the sum of values of its deepest leaves.
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def deepestLeavesSum(self, root: TreeNode) -> int:
+        stack = [root]
+        val = []
+        
+        while stack:
+            stack_next = []
+            temp = 0
+            while stack:
+                cur = stack.pop(0)
+                if cur:
+                    stack_next.append(cur.left)
+                    stack_next.append(cur.right)
+                    temp += cur.val
+            
+            if not stack_next:
+                return(val[-1])
+            else:
+                stack = stack_next
+                val.append(temp)
