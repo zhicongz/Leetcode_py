@@ -42,3 +42,12 @@ class Solution:
             return(lb)
                 
 ```
+Better solution from Lee
+```
+    def findBestValue(self, A, target):
+        A.sort(reverse=1)
+        maxA, n = A[0], len(A)
+        while A and target >= A[-1] * len(A):
+            target -= A.pop()
+        return int((target + len(A) / 2.0 - 0.1) / len(A)) if A else maxA
+```
