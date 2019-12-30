@@ -1,0 +1,44 @@
+Sum of Mutated Array Closest to Target
+
+Given an integer array arr and a target value target, return the integer value such that when we change all the integers larger than value in the given array to be equal to value, the sum of the array gets as close as possible (in absolute difference) to target.
+
+In case of a tie, return the minimum such integer.
+
+Notice that the answer is not neccesarilly a number from arr.
+
+```
+class Solution:
+    def findBestValue(self, arr: List[int], target: int) -> int:
+        lb,ub = 1, target
+        
+        arr = sorted(arr)
+        
+        def foo(k):
+            lb,ub = 0,len(arr)
+            while lb<ub:
+                temp = (lb+ub)//2
+                if arr[temp] >= k:
+                    ub = temp
+                else:
+                    lb = temp + 1
+            
+            return(sum(arr[:lb]) + k*(len(arr)-lb) - target)
+        
+        while lb<ub:
+            temp = (lb+ub)//2
+            if foo(temp) == 0:
+                return(temp)
+            elif foo(temp) > 0:
+                ub = temp
+            else:
+                lb = temp + 1
+        
+        a = foo(lb)
+        b = foo(lb-1)
+        
+        if abs(a) >= abs(b):
+            return(lb-1)
+        else:
+            return(lb)
+                
+```
