@@ -1,0 +1,23 @@
+1310. XOR Queries of a Subarray
+
+A XOR A = 0
+0 XOR A = A
+
+```
+class Solution:
+    def xorQueries(self, arr: List[int], queries: List[List[int]]) -> List[int]:
+        stock = [0]
+        
+        for i in arr:
+            stock.append(stock[-1]^i)
+        
+        
+        res = []
+        
+        for query in queries:
+            res.append(stock[query[0]]^stock[query[1]+1])
+        
+        return res
+```
+
+        
