@@ -1,0 +1,26 @@
+1319.Number of Operations to Make Network Connected
+```
+class Solution:
+    def makeConnected(self, n: int, connections: List[List[int]]) -> int:
+        if len(connections) < n-1:
+            return -1
+
+        def find(a):
+            while a!=d[a]:
+                d[a] = d[d[a]]
+                a = d[a]
+            return(a)            
+            
+        d = {i:i for i in range(n)}
+            
+        for item in connections:
+            rt_a = find(item[0])
+            rt_b = find(item[1])
+            d[rt_b] = rt_a
+            
+        k = len(set(find(find(i)) for i in d))
+        
+        return k-1
+```
+
+        
