@@ -1,0 +1,49 @@
+1320.Minimum Distance to Type a Word Using Two Fingers
+```
+class Solution:
+    def minimumDistance(self, word: str) -> int:
+        d = {("0","0"):0}
+        for w in word:
+            d_new = {}
+            for (x,y) in d:
+                # fg1 to w
+                if x == "0":
+                    if (w,y) in d_new:
+                        d_new[(w,y)] = min(d[(x,y)], d_new[(w,y)])
+                    else:
+                        d_new[(w,y)] = d[(x,y)]
+                else:
+                    # dist
+                    end = ord(w) - 65
+                    start = ord(x) - 65
+                    dist_r = abs(start//6 - end//6)
+                    dist_c = abs(start%6 - end%6)
+                    dist = dist_c + dist_r
+                    if (w,y) in d_new:
+                        d_new[(w,y)] = min(d[(x,y)] + dist, d_new[(w,y)])
+                    else:
+                        d_new[(w,y)] = d[(x,y)] + dist
+                
+                # fg2 to w
+                if y == "0":
+                    if (x,w) in d_new:
+                        d_new[(x,w)] = min(d[(x,y)], d_new[(x,w)])                   
+                    else:    
+                        d_new[(x,w)] = d[(x,y)]
+                else:
+                    # dist
+                    end = ord(w) - 65
+                    start = ord(y) - 65
+                    dist_r = abs(start//6 - end//6)
+                    dist_c = abs(start%6 - end%6)
+                    dist = dist_c + dist_r
+                    if (x,w) in d_new:
+                        d_new[(x,w)] = min(d[(x,y)] + dist, d_new[(x,w)])                   
+                    else:    
+                        d_new[(x,w)] = d[(x,y)] + dist
+            d = d_new    
+            #print(d)
+
+        return(min(d.values()))
+```
+                
