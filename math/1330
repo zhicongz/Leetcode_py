@@ -1,0 +1,33 @@
+1330. Reverse Subarray To Maximize Array Value
+
+You are given an integer array nums. The value of this array is defined as the sum of |nums[i]-nums[i+1]| for all 0 <= i < nums.length-1.
+
+You are allowed to select any subarray of the given array and reverse it. You can perform this operation only once.
+
+Find maximum possible value of the final array.
+
+```
+class Solution:
+    def maxValueAfterReverse(self, nums: List[int]) -> int:
+        n = len(nums)        
+        if n==1: return 0
+
+        base = [abs(nums[i]-nums[i+1]) for i in range(n-1)]
+        
+        # flip nums[i:]
+        M1 = max(abs(nums[i]-nums[-1]) - base[i] for i in range(n-1))
+        
+        # flip nums[:i]
+        M2 = max(abs(nums[i]-nums[0]) - base[i-1] for i in range(1,n-1))
+        
+        # others
+        s = [sorted([nums[i],nums[i+1]]) for i in range(n-1)]
+        
+        M3 = 2*(max(s[i][0] for i in range(n-1)) - min(s[i][1] for i in range(n-1)))
+        
+        return max(M1,M2,M3,0) + sum(base)
+```
+This is the answer for Leetcode user LiLi. I got ETL.
+`M3` stocks abs() difference between any two elements in the list. 
+For example, `[s1,l1; s2,l2]`. Now if we switch position of l1 and s2, we have `[s1,s2; l1,l2]` and the distance
+goes up by 2*(s2-l1).
