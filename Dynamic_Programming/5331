@@ -1,0 +1,30 @@
+5331. Jump Game V
+```{r}
+class Solution:
+    def maxJumps(self, arr: List[int], d: int) -> int:
+        # order idx
+        a = list(enumerate(arr))
+        a.sort(key = lambda x:x[1])
+        
+        idx = [ele[0] for ele in a]
+       
+        #print(idx)
+        #dp
+        dp = [1]*len(arr)
+        
+        for i in idx:           
+            for dis in range(1,d+1):
+                if i-dis >=0 and arr[i-dis]<arr[i]:
+                    dp[i] = max(dp[i], dp[i-dis]+1)
+                else: break
+            
+            for dis in range(1,d+1):
+                if i+dis <len(arr) and arr[i+dis]<arr[i]:
+                    dp[i] = max(dp[i], dp[i+dis]+1)
+                else: break                            
+        
+            #print(dp)
+            
+            
+        return max(dp)
+```
