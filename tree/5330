@@ -1,0 +1,20 @@
+5330. Maximum Product of Splitted Binary Tree
+```{r}
+class Solution:
+    def maxProduct(self, root: TreeNode) -> int:
+        seen = set()
+        
+        def foo(node,cnt):
+            if node:
+                cnt_l = foo(node.left, cnt)
+                cnt_r = foo(node.right, cnt)
+                seen.add(node.val+cnt_l+cnt_r)
+                return node.val+cnt_l+cnt_r
+            else: return 0        
+        
+        target = foo(root,0)/2
+        
+        res = min(abs(i-target) for i in seen)
+        
+        return int((target-res)*(target+res) % (10**9+7))
+```
