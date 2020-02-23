@@ -1,0 +1,43 @@
+1358. Number of Substrings Containing All Three Characters
+Return the number of substrings containing at least one occurrence of all these characters a, b and c.
+
+```
+class Solution:
+    def numberOfSubstrings(self, s: str) -> int:
+        j = 0
+        n = len(s)
+        new = {"a":-1,"b":-1,"c":-1}
+        cur = {"a","b","c"}
+        res = 0
+        for i in range(n):
+            if new["a"] <i: 
+                cur.remove("a")
+            if new["b"] <i: 
+                cur.remove("b")
+            if new["c"] <i: 
+                cur.remove("c")                
+    
+            while cur != {"a","b","c"} and j<n:
+                new[s[j]] = j
+                cur.add(s[j])
+                j += 1
+            if j==n and cur != {"a","b","c"}:
+                return res
+            res += n-j+1
+        return res
+            
+```
+solution for Lee
+```
+    def numberOfSubstrings(self, s):
+        res = i = 0
+        count = {c: 0 for c in 'abc'}
+        for j in xrange(len(s)):
+            count[s[j]] += 1
+            while all(count.values()):
+                count[s[i]] -= 1
+                i += 1
+            res += i
+        return res
+```
+Why Lee is so YouXiu?!
