@@ -1,0 +1,22 @@
+1373. Maximum Sum BST in Binary Tree
+
+```
+class Solution:
+    def maxSumBST(self, root: TreeNode) -> int:
+        res = [0]
+        # foo return [total val, range]
+        def foo(root):
+            if not root: return [0, float("Inf"), float("-Inf")]
+            
+            left = foo(root.left)
+            right = foo(root.right)
+                       
+            if left[2] < root.val < right[1]:
+                res.append(left[0]+right[0]+root.val)
+                return [left[0]+right[0]+root.val, min(left[1], root.val), max(right[2], root.val)]
+            else:
+                return [0, float("-Inf"), float("Inf")]
+        
+        foo(root)
+        return max(res)
+```
