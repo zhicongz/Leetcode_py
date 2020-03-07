@@ -1,0 +1,28 @@
+1371. Find the Longest Substring Containing Vowels in Even Counts
+
+```
+class Solution:
+    def findTheLongestSubstring(self, s: str) -> int:
+        d = collections.defaultdict(list)
+        d[0].append(-1)
+        mask = {e:i for (i,e) in enumerate(["a","e","i","o","u"])}
+        
+        cur = 0
+        pre_i = 0
+        for (i,e) in enumerate(s):
+            if e in mask:
+                cur ^= 1 << mask[e]
+                pre_i = i
+                
+            if not d[cur]:
+                d[cur].append(pre_i)
+            else:
+                d[cur].append(i)
+            
+        #print(d)
+        return max(x[-1]-x[0] for x in d.values())
+```
+
+
+                
+                
