@@ -1,0 +1,23 @@
+1382. Balance a Binary Search Tree
+```
+class Solution:
+    def balanceBST(self, root: TreeNode) -> TreeNode:
+        def foo(root):
+            if not root:
+                return []
+            return foo(root.left) + [root.val] + foo(root.right)
+        
+        stack = foo(root)
+        #print(stack)
+        
+        def tree(num):
+            if num:
+                idx = len(num)//2
+                node = TreeNode(num[idx])
+                
+                node.left = tree(num[:idx])
+                node.right = tree(num[idx+1:])
+                return node
+            
+        return tree(stack)
+```
