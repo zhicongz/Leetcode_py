@@ -1,0 +1,33 @@
+1388. Pizza With 3n Slices
+There is a pizza with 3n slices of varying size, you and your friends will take slices of pizza as follows:
+
+You will pick any pizza slice.
+Your friend Alice will pick next slice in anti clockwise direction of your pick. 
+Your friend Bob will pick next slice in clockwise direction of your pick.
+Repeat until there are no more slices of pizzas.
+Sizes of Pizza slices is represented by circular array slices in clockwise direction.
+
+Return the maximum possible sum of slice sizes which you can have.
+
+```
+class Solution:
+    def maxSizeSlices(self, slices: List[int]) -> int:
+        n = len(slices)
+        m = n//3
+        
+        # we can always avoid pick min
+        a = sorted(enumerate(slices), key = lambda x: x[1])[0][0]
+        slices = slices[a:]+slices[:a]
+           
+        
+        dp = [[0]*n for _ in range(m)]
+        dp[0] = slices        
+        dp[0][0] = 0
+        for i in range(1,m):
+            for j in range(2,n):
+                dp[i][j] = slices[j] + max(dp[i-1][k] for k in range(j-1))
+        
+        #print(dp)
+        
+        return max(dp[-1])
+```
