@@ -1,0 +1,60 @@
+5415. Maximum Number of Darts Inside of a Circular Dartboard
+
+You have a very large square wall and a circular dartboard placed on the wall. You have been challenged to throw darts into the board blindfolded. Darts thrown at the wall are represented as an array of points on a 2D plane. 
+
+Return the maximum number of points that are within or lie on any circular dartboard of radius r.
+
+Solution:
+Assume there exists a circle that includes x number of points with radius r.
+If less than two points on the circle boundary, we can move the circle all the way to right and down such that it attach the first two points. 
+In this way, the circel radius r doesn't change, the number of points in the circle doesn't change.
+
+So, for any two points in the space, find the potential center of the circle, count number of points in the correpsonding circle, pick up the maximum. 
+Becasue of the float error, enlarge the radius by 0.01 when computing the distance between points to center of the circle.
+
+```
+class Solution:
+    def numPoints(self, points: List[List[int]], r: int) -> int:
+        def dis_sq(a,b):
+            return (a[0]-b[0])**2 + (a[1]-b[1])**2
+        res = 0
+        
+        n = len(points)
+        
+        for i in range(n):
+            rep = 1
+            for j in range(i):
+                d = dis_sq(points[i],points[j])
+                if d == 4*r**2:
+                    pt = [[(points[i][0] + points[j][0])/2, (points[i][1] + points[j][1])/2]]
+                elif d > 4*r**2:
+                    pt = []
+                else: 
+                    mid = [(points[i][0] + points[j][0])/2, (points[i][1] + points[j][1])/2]
+                    c = ((points[j][1] - points[i][1])**2 + (points[j][0] - points[i][0])**2)**(1/2)
+                    move = (r**2 - (c/2)**2)**(1/2)
+                    if points[j][0] - points[i][0] == 0 and points[j][1] - points[i][1]:
+                        rep += 1
+                        continue
+                    elif points[j][0] - points[i][0] == 0:
+                        pt = [[mid[0]-move,mid[1]], [mid[0]+move,mid[1]]]
+                    elif points[j][1] - points[i][1] == 0:
+                        pt = [[mid[0],mid[1]-move], [mid[0],mid[1]+move]]
+                    else:
+                        slope = (points[j][1] - points[i][1])/(points[j][0] - points[i][0])
+                        k = 1/slope
+                        x = ((move**2)/(1+k**2))**(1/2)
+                        y = k*x
+                        pt = [[mid[0]+x,mid[1]-y], [mid[0]-x,mid[1]+y]]
+                
+                #print(points[i],points[j],pt)
+                for cur in pt:
+                    cnt = 0
+                    for k in range(n):
+                        if dis_sq(cur,points[k]) <= r**2+0.01:
+                            cnt += 1
+                        #print(dis_sq(cur,points[k]), cnt)
+                    res = max(res, cnt)
+            res = max(res, rep)
+        return res
+```
