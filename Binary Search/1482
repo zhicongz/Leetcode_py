@@ -1,0 +1,41 @@
+1482. Minimum Number of Days to Make m Bouquets
+Given an integer array bloomDay, an integer m and an integer k.
+
+We need to make m bouquets. To make a bouquet, you need to use k adjacent flowers from the garden.
+
+The garden consists of n flowers, the ith flower will bloom in the bloomDay[i] and then can be used in exactly one bouquet.
+
+Return the minimum number of days you need to wait to be able to make m bouquets from the garden. If it is impossible to make m bouquets return -1.
+
+intuition: 
+Check if the init avaiable slots is enough.
+Sort the bloomDay from the largest to the smallest.
+Each time, compute after removing the largest bloomDay, the remaining are enough. If not, return the current largest day.
+
+```
+class Solution:
+    def minDays(self, bloomDay: List[int], m: int, k: int) -> int:
+        n = len(bloomDay)
+        avable = n//k
+        if avable < m:
+            return -1
+        
+        stack = sorted(enumerate(bloomDay), key = lambda x: -x[1])
+        
+        idx = [-1,n]
+        
+        for (i,e) in stack:
+            lb,ub = 0, len(idx)
+            while lb<ub:
+                temp = (lb+ub)//2
+                if idx[temp] >= i:
+                    ub = temp
+                else:
+                    lb = temp+1
+            a,b = idx[lb-1],idx[lb]
+            avable += (i-a-1)//k + (b-i-1)//k - (b-a-1)//k
+            
+            idx.insert(lb,i)
+            if avable < m:
+                return e 
+```
