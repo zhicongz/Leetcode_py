@@ -1,0 +1,62 @@
+Given a 2D board and a list of words from the dictionary, find all words in the board.
+
+Each word must be constructed from letters of sequentially adjacent cell, where "adjacent" cells are those horizontally or vertically neighboring. The same letter cell may not be used more than once in a word.
+
+```
+class node:
+    def __init__(self, x):
+        self.val = x
+        self.next = {}
+        self.pre = None
+        self.end = False
+
+class trie:
+    def __init__(self, words):
+        self.node = node("")
+        for word in words:
+            self.add(word)
+    
+    def add(self, word):
+        temp = self.node
+        for letter in word:
+            if letter not in temp.next:
+                temp.next[letter] = node(letter)
+                temp.next[letter].pre = temp
+            temp = temp.next[letter]
+        temp.end = True
+    
+    def search(self, trienode):
+        res = []
+        while trienode.pre:
+            res.append(trienode.val)
+            trienode = trienode.pre
+        res.append(trienode.val)
+        
+        return ''.join(res[::-1])
+    
+class Solution:
+    def findWords(self, board: List[List[str]], words: List[str]) -> List[str]:
+        my_trie = trie(words)
+        m,n = len(board), len(board[0])
+        res = set()
+        
+        #print(my_trie.node.next)
+        
+        def helper(node,i,j):
+            if node.end: 
+                res.add(my_trie.search(node))
+                node.end = False
+                
+            if 0<=i<m and 0<=j<n and board[i][j] in node.next:
+                temp = board[i][j]
+                board[i][j] = ""  # to aviod bfs search back and forth
+                for [x,y] in [[i+1,j],[i-1,j],[i,j-1],[i,j+1]]:
+                    helper(node.next[temp], x,y)
+                board[i][j] = temp
+
+        for i in range(m):
+            for j in range(n):
+                helper(my_trie.node,i,j)
+        
+        return list(res)
+```
