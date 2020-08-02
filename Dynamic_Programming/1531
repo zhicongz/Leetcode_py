@@ -1,0 +1,30 @@
+1531. String Compression II
+
+Run-length encoding is a string compression method that works by replacing consecutive identical characters (repeated 2 or more times) with the concatenation of the character and the number marking the count of the characters (length of the run). For example, to compress the string "aabccc" we replace "aa" by "a2" and replace "ccc" by "c3". Thus the compressed string becomes "a2bc3".
+
+Notice that in this problem, we are not adding '1' after single characters.
+
+Given a string s and an integer k. You need to delete at most k characters from s such that the run-length encoded version of s has minimum length.
+
+Find the minimum length of the run-length encoded version of s after deleting at most k characters.
+
+```
+class Solution:
+    def getLengthOfOptimalCompression(self, s: str, k: int) -> int:
+        @lru_cache(None)
+        def counter(cur_idx, left, left_cnt, k):
+            if k < 0: return float("Inf")
+            if cur_idx >= len(s): return 0
+            if left == s[cur_idx]:
+                if left_cnt == 1 or left_cnt == 9 or left_cnt == 99:
+                    return 1 +  counter(cur_idx + 1, left, left_cnt + 1, k)
+                else:
+                    return counter(cur_idx + 1, left, left_cnt + 1, k)
+            else:
+                a = 1 +  counter(cur_idx + 1, s[cur_idx], 1, k) ## keep
+                b = counter(cur_idx + 1, left, left_cnt, k-1)
+                return min(a,b)
+        
+        return counter(0, "", 0, k)
+```
+Learn from klimkina. Save results in array DP is hard to code as too much inputs. 4D array.
