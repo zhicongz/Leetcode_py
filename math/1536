@@ -1,0 +1,27 @@
+1536. Minimum Swaps to Arrange a Binary Grid
+
+```
+class Solution:
+    def minSwaps(self, grid: List[List[int]]) -> int:
+        n = len(grid)
+        ft_zero = [0]*n
+        
+        for i in range(n):
+            for j in range(n-1,-1,-1):
+                if grid[i][j] != 0: 
+                    ft_zero[i] = j
+                    break
+        print(ft_zero)
+        
+        cnt = 0
+        for i in range(n):
+            if ft_zero[i] > i:     
+                for j in range(i+1,n):
+                    if ft_zero[j] <= i:
+                        temp = ft_zero.pop(j)
+                        ft_zero.insert(i,temp)
+                        cnt += j-i
+                        break
+                else: return -1
+        return cnt
+```
