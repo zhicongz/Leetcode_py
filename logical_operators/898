@@ -1,0 +1,11 @@
+898. Bitwise ORs of Subarrays
+
+```
+class Solution:
+    def subarrayBitwiseORs(self, A: List[int]) -> int:
+        res,s = set(),set()
+        for a in A:
+            s = {a|b for b in s}|{a}
+            res |= s
+        return len(res)
+```
