@@ -1,0 +1,46 @@
+1537. Get the Maximum Score
+
+You are given two sorted arrays of distinct integers nums1 and nums2.
+
+A valid path is defined as follows:
+
+Choose array nums1 or nums2 to traverse (from index-0).
+Traverse the current array from left to right.
+If you are reading any value that is present in nums1 and nums2 you are allowed to change your path to the other array. (Only one repeated value is considered in the valid path).
+Score is defined as the sum of uniques values in a valid path.
+
+Return the maximum score you can obtain of all possible valid paths.
+
+Since the answer may be too large, return it modulo 10^9 + 7.
+
+```
+class Solution:
+    def maxSum(self, nums1: List[int], nums2: List[int]) -> int:
+        mod = 10**9 + 7
+        i,j = 0,0
+        common = []
+        m,n = len(nums1), len(nums2)
+        cnt1,cnt2,cnt_all = nums1[0],nums2[0],0
+        while i < m and j < n:           
+            if nums1[i] < nums2[j]:
+                i += 1
+                if i<m: cnt1 += nums1[i]
+            elif nums1[i] > nums2[j]:
+                j += 1
+                if j<n: cnt2 += nums2[j]
+            else:
+                cnt_all += max(cnt1,cnt2)
+                #print(cnt_all)
+                i += 1
+                j += 1
+                cnt1,cnt2 = 0,0
+                if i<m: cnt1 = nums1[i]
+                if j<n: cnt2 = nums2[j]
+
+        if i < m: cnt1 += sum(nums1[i+1:])
+        if j < n: cnt2 += sum(nums2[j+1:])
+        cnt_all += max(cnt1,cnt2)
+        return cnt_all % mod
+```
+
+Set connection nodes as all the equal numbers among two arrays. a max path will go over the larger path in any two adjoint nodes. For two ends segments, pick the larger one.
