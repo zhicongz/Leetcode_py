@@ -1,0 +1,45 @@
+1526. Minimum Number of Increments on Subarrays to Form a Target Array
+
+Given an array of positive integers target and an array initial of same size with all zeros.
+
+Return the minimum number of operations to form a target array from initial if you are allowed to do the following operation:
+
+Choose any subarray from initial and increment each value by one.
+The answer is guaranteed to fit within the range of a 32-bit signed integer.
+
+```
+class Solution:
+    def minNumberOperations(self, target: List[int]) -> int:
+        res = 0
+        n = len(target)
+        d = sorted([[i,e] for (i,e) in enumerate(target)], key = lambda x:-x[1])
+        #print(d)
+        cur = 0
+        parts = 1
+        bound = {0,n-1}
+        while d:
+            [i,e] = d.pop()
+            res += (e-cur)*parts
+            if i not in bound:               
+                parts += 1
+            if (i==0 and e>=target[i+1]) or (i==n-1 and e > target[i-1]) or (e > target[i-1] and e >= target[i+1]):
+                parts -= 1
+            bound.add(i-1)
+            bound.add(i+1)    
+            cur = e
+            #print(res,parts,bound)
+        return res
+```
+
+Add values from bottom to top. If a value attach the target in the middle, the target split into two parts. If one hill is filled, parts-1. 
+
+```
+    def minNumberOperations(self, A):
+        res = pre = 0
+        for a in A:
+            res += max(a - pre, 0)
+            pre = a
+        return res
+```
+
+Lee god!
