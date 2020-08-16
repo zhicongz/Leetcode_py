@@ -1,0 +1,28 @@
+123. Best Time to Buy and Sell Stock III
+
+```
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        n,k = len(prices),2
+        dp = [[0]*(n+1) for _ in range(k+1)]
+        mdp = [[0]*(n+1) for _ in range(k+1)]
+        diff = [prices[i+1] - prices[i] for i in range(n-1)]
+        diff = [0] + diff
+        
+        for i in range(k):
+            for j in range(n):
+                dp[i+1][j+1] = max(dp[i+1][j], mdp[i][j]) + diff[j]
+                mdp[i+1][j+1] = max(mdp[i+1][j], dp[i+1][j+1])
+        #print(dp,mdp)
+        return mdp[-1][-1]
+```
+
+dp[i+1,j+1]: the maximum benefit with i transaction and sell at day j
+mdp[i+1,j+1]: the maximum benefit with i transaction and sell no later than day j
+Here we all buy and sell on same day with profit 0.
+
+To obtain maximum benefit with i transaction and sell at day j, we have to paths:
+  1. Keep the current stock one more day. In this way, the maximum benefit would be dp[i+1,j] + diff[j]
+  2. Buy a new stock on day j-i and sell on day j. In this way, the maximum benefit would be the maximum benefit with i-1 transaction and sell no later than day j, 
+  which is mdp[i][j], + diff[j]
+ 
