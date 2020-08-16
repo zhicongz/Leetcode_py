@@ -1,0 +1,26 @@
+1553. Minimum Number of Days to Eat N Oranges
+
+There are n oranges in the kitchen and you decided to eat some of these oranges every day as follows:
+
+Eat one orange.
+If the number of remaining oranges (n) is divisible by 2 then you can eat  n/2 oranges.
+If the number of remaining oranges (n) is divisible by 3 then you can eat  2*(n/3) oranges.
+You can only choose one of the actions per day.
+
+Return the minimum number of days to eat n oranges.
+
+```
+class Solution:
+    def minDays(self, n: int) -> int:
+        @lru_cache
+        def foo(n):
+            if n == 1: return 1
+            if n == 0: return 0
+            return min(foo(n//2) + n%2 + 1, foo(n//3) + n%3 + 1)
+        
+        return foo(n)
+```
+
+We don't know if n//2 is faster or n//3 is faster, but we know either or those two should be faster than n-1.
+Take n//3 as an example. If we don't do n//3 when n%3 = 0 but do (n-3)//3. The later optional will take 4 days and return exactly same number as n//3-1 which takes 2 days. 
+Thus, for any n, the fastest path must be n//2 or n//3.
