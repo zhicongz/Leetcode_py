@@ -1,0 +1,26 @@
+1552. Magnetic Force Between Two Balls
+
+```
+class Solution:
+    def maxDistance(self, position: List[int], m: int) -> int:
+        position.sort()
+        lb,ub = 0, position[-1]-position[0]
+        
+        def helper(n):
+            cnt = 1
+            cur = position[0]
+            for i in position:
+                if i >= cur + n: 
+                    cnt += 1
+                    cur = i
+            return cnt>=m
+        
+        while lb<ub:
+            temp = (lb+ub+1)//2
+            if helper(temp):
+                lb = temp
+            else:
+                ub = temp - 1
+        
+        return lb
+```
