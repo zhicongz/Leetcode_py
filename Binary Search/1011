@@ -1,0 +1,41 @@
+1011. Capacity To Ship Packages Within D Days
+
+```
+class Solution:
+    def shipWithinDays(self, weights: List[int], D: int) -> int:
+        n = len(weights)
+        presum = [0]*(n+1)
+        for i,w in enumerate(weights):
+            presum[i+1] = presum[i] + weights[i]
+        
+        ## binary search idx in presum
+        def foo(x):
+            lb,ub = 0,n
+            while lb<ub:
+                temp = (lb+ub+1)//2
+                if presum[temp]<=x:
+                    lb = temp
+                else:
+                    ub = temp -1
+            return lb
+            
+        def helper(w):
+            cnt, cur = 0, 0
+            while cur<presum[-1]:
+                idx = foo(w+cur)
+                cur = presum[idx]
+                cnt += 1
+                if cnt > D: return False
+            return True
+            
+        lb,ub = 1, sum(weights)
+        while lb<ub:
+            temp = (lb+ub)//2
+            #print(lb,ub,temp, helper(temp))
+            if helper(temp):
+                ub = temp
+            else:
+                lb = temp + 1
+        
+        return lb
+```
