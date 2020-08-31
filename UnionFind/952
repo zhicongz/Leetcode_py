@@ -1,0 +1,59 @@
+952. Largest Component Size by Common Factor
+
+Given a non-empty array of unique positive integers A, consider the following graph:
+
+There are A.length nodes, labelled A[0] to A[A.length - 1];
+There is an edge between A[i] and A[j] if and only if A[i] and A[j] share a common factor greater than 1.
+Return the size of the largest connected component in the graph.
+
+```
+class UnionFind:
+    def __init__(self,n):
+        self.stack = list(range(n))
+        self.size = [1]*n
+        
+    def union(self,i,j):
+        idx_i, idx_j = self.find(i), self.find(j)
+        if idx_i == idx_j: return
+        if self.size[idx_i] > self.size[idx_j]:
+            self.stack[idx_j] = idx_i
+            self.size[idx_i] += self.size[idx_j]
+        else:
+            self.stack[idx_i] = idx_j
+            self.size[idx_j] += self.size[idx_i]
+            
+    def find(self,i):
+        s = self.stack
+        while s[i] != s[s[i]]:
+            s[i] = s[s[i]]
+        self.stack = s
+        return s[i]
+        
+    
+class Solution:
+    def largestComponentSize(self, A: List[int]) -> int:
+        n = len(A)
+        res = UnionFind(n)
+        p = collections.defaultdict(list)
+        
+        @lru_cache
+        def foo(x):
+            for i in range(2, int(x**(1/2))+1):
+                if x%i == 0:
+                    return foo(x//i) | {i}
+            return {x}
+            
+        for i,e in enumerate(A):
+            temp = foo(e)
+            for j in temp: p[j].append(i)
+        
+        for gp in p.values():
+            for i in range(len(gp)-1):
+                res.union(gp[i], gp[i+1])      
+        
+        #print(p, res.stack, res.size)
+        return max(res.size)
+        
+```
+
+UnionFind record size of groups. Save common factors for union pairs.
