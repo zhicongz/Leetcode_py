@@ -1,0 +1,32 @@
+309. Best Time to Buy and Sell Stock with Cooldown
+
+Say you have an array for which the ith element is the price of a given stock on day i.
+
+Design an algorithm to find the maximum profit. You may complete as many transactions as you like (ie, buy one and sell one share of the stock multiple times) with the following restrictions:
+
+You may not engage in multiple transactions at the same time (ie, you must sell the stock before you buy again).
+After you sell your stock, you cannot buy stock on next day. (ie, cooldown 1 day)
+
+Example:
+
+Input: [1,2,3,0,2]
+Output: 3 
+Explanation: transactions = [buy, sell, cooldown, buy, sell]
+
+```
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        n = len(prices)
+        if n<2: return 0
+        dp = [[0,0,0] for _ in range(n+1)] # [bought&hold,sold,ready to buy]
+        dp[0][0] = -prices[0]
+        for i in range(n):
+            dp[i+1] = [max(dp[i][0],dp[i][2]-prices[i]), max(dp[i][0]+prices[i], dp[i][1]), dp[i][1]]
+        #print(dp)
+        return dp[-1][1]
+```
+Cooldown leads greedy method failed. Use DP with three status, hold stock, sold stock, and ready to buy new stock, to solve the problem. 
+Notice ready to buy new stock is a subset of sold stock but we need this for cooldown.
+profit on hold stock[i+1] = max(hold stock[i] or buy stock on day i with pre-profit ready to buy on day i)
+profit on sold stock[i+1] = max(sold stock[i] or sold stock on day i with pre-profit hold stack[i])
+profit on ready to sell stock[i+1] = profit sold stock on day[i]. Here ready to sell stock[i] is not considered as this is a subset of sold stock.
