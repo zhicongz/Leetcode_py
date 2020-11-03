@@ -1,0 +1,42 @@
+1627. Graph Connectivity With Threshold
+
+We have n cities labeled from 1 to n. Two different cities with labels x and y are directly connected by a bidirectional road if and only if x and y share a common divisor strictly greater than some threshold. More formally, cities with labels x and y have a road between them if there exists an integer z such that all of the following are true:
+
+x % z == 0, y % z == 0, and z > threshold.
+
+Given the two integers, n and threshold, and an array of queries, you must determine for each queries[i] = [ai, bi] if cities ai and bi are connected (i.e. there is some path between them).
+
+Return an array answer, where answer.length == queries.length and answer[i] is true if for the ith query, there is a path between ai and bi, or answer[i] is false if there is no path.
+
+```
+class UnionFind:
+    def __init__(self,n):
+        self.stack = list(range(n))
+        self.size = [1]*n
+        
+    def union(self,i,j):
+        idx_i, idx_j = self.find(i), self.find(j)
+        if idx_i == idx_j: return
+        if self.size[idx_i] > self.size[idx_j]:
+            self.stack[idx_j] = idx_i
+            self.size[idx_i] += self.size[idx_j]
+        else:
+            self.stack[idx_i] = idx_j
+            self.size[idx_j] += self.size[idx_i]
+            
+    def find(self,i):
+        s = self.stack
+        while s[i] != s[s[i]]:
+            s[i] = s[s[i]]
+        self.stack = s
+        return s[i]       
+
+class Solution:
+    def areConnected(self, n: int, threshold: int, queries: List[List[int]]) -> List[bool]:
+        uf = UnionFind(n+1)
+        for i in range(max(threshold+1,1),n+1):
+            for j in range(i*2,n+1,i):
+                uf.union(i,j)
+        return [uf.find(i)==uf.find(j) for [i,j] in queries]       
+```
+Union find and fast select pairs to union.
