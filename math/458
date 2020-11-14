@@ -1,0 +1,19 @@
+458. Poor Pigs
+
+If there are n buckets and a pig drinking poison will die within m minutes, how many pigs (x) you need to figure out the poisonous bucket within p minutes? There is exactly one bucket with poison.
+
+```
+class Solution:
+    def poorPigs(self, buckets: int, minutesToDie: int, minutesToTest: int) -> int:
+        turn = minutesToTest//minutesToDie
+        lb,ub = 0,buckets
+        while lb<ub:
+            temp = (lb+ub)//2
+            if (turn+1)**(temp) < buckets:
+                lb = temp + 1
+            else:
+                ub = temp
+        return lb
+```
+Assume there are $t$ turns. For each pig, the results could be treated as a t dim vector. i.e. [live, live,...,die,die...]. Once the status changes to die, it stays in die forever.
+Thus, each vector hase t+1 different status combinations. x pigs intotal can generate (t+1)^x different input, to build up a mapping from input to each bucket, (t+1)^x \geq n
