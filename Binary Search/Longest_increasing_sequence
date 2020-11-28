@@ -1,0 +1,51 @@
+```
+## O(nlogn) faster than dp O(n^2)
+A = [2,1,1,5,6,2,3,1]
+n = len(A)
+def longest(A):
+    mono = [10**9] * n
+    for a in A:
+        mono[bisect.bisect_left(mono, a)] = a
+        print(mono)
+    return bisect.bisect(mono, a)
+    
+longest(A[:5])
+## [2, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000]
+## [1, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000]
+## [1, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000]
+## [1, 5, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000]
+## [1, 5, 6, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000]
+```
+
+In this example, for the second number 1 in the list, it's less than a[0] so replace the value at mono[0].
+If a's LIS is longer than any LIS before, it will replace the first 10**9 to a. If not, it will refresh the LIS before such that mono saves the smallest LIS with same length.
+
+
+1671. Minimum Number of Removals to Make Mountain Array
+Given an integer array nums, return the minimum number of elements to remove to make nums a mountain array.
+```
+    def minimumMountainRemovals(self, nums: List[int]) -> int:
+        n = len(nums)
+        dp = [1]*(n+1)
+        for i in range(n):
+            for j in range(i):
+                if nums[i]>nums[j]: dp[i+1] = max(dp[j+1]+1, dp[i+1])
+        incrs = dp
+        
+        nums = nums[::-1]
+        dp = [1]*(n+1)
+        for i in range(n):
+            for j in range(i):
+                if nums[i]>nums[j]: dp[i+1] = max(dp[j+1]+1, dp[i+1])
+        decs = dp[::-1]
+        
+        #print(incrs[1:])
+        #print(decs[:-1])
+        
+        res = 0
+        for (a,b) in zip(incrs[1:], decs[:-1]):
+            if a >= 2 and b >= 2:
+                res = max(res, a+b-1)
+        return n - res
+```
+
