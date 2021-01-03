@@ -1,3 +1,4 @@
+method 1:
 ```
 ## O(nlogn) faster than dp O(n^2)
 A = [2,1,1,5,6,2,3,1]
@@ -15,6 +16,24 @@ longest(A[:5])
 ## [1, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000]
 ## [1, 5, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000]
 ## [1, 5, 6, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000]
+```
+method 2:
+```
+class Solution:
+    def lengthOfLIS(self, nums: List[int]) -> int:
+        tail = [float("-inf")] ## index is length and element is min tail
+        for e in nums:
+            if e>tail[-1]: 
+                tail.append(e)
+                continue
+            lb,ub = 0,len(tail)-1
+            while lb<ub:
+                temp = (lb+ub)//2
+                if tail[temp] >= e:
+                    ub = temp
+                else: lb = temp+1
+            tail[lb] = e
+        return len(tail)-1   
 ```
 
 In this example, for the second number 1 in the list, it's less than a[0] so replace the value at mono[0].
