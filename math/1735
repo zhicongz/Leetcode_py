@@ -1,0 +1,62 @@
+1735. Count Ways to Make Array With Product
+
+* Find prime number
+
+* decompose numbers into prime factors
+
+* compute number of way to combine prime factors to items in production.
+ + Same to answer the question: n boxes and m candys, how many different ways to place the candys if boxes are treated differently
+ 
+```
+class Solution:
+    def waysToFillArray(self, queries: List[List[int]]) -> List[int]:
+        mod = 10**9+7
+        k,m = max(i[0] for i in queries), max(i[1] for i in queries)
+        # prime
+        prime = []
+        for i in range(2,m+1):
+            for j in range(2,round(i**(1/2))+1):
+                if i%j == 0: break
+            else: prime.append(i)
+
+        # prime factors
+        @lru_cache(m)
+        def pf(b):
+            for i in prime:
+                if i>b: break
+                if b%i == 0:
+                    return [i] + pf(b//i)        
+            return []
+       
+        # n choose k 
+        @lru_cache(k*m)
+        def choose(n,k):
+            if k == 1: return n
+            return n*choose(n-1,k-1)//k
+        
+        # comb
+        @lru_cache(k*14) ## 2**14 > 10*4
+        def dp(n,m):
+            if n == 0:
+                if m == 0: return 1
+                else: return 0
+            if m < n:
+                return 0
+            tmp = 0
+            for j in range(1, m + 1):
+                tmp += dp(n - 1, m - j)
+            return tmp%mod
+        
+        res = []
+        for [a,b] in queries:
+            stack = pf(b)
+            #print(stack)
+            temp = collections.Counter(stack)
+            cnt = 1
+            for i in temp.values():
+                cnt *= sum(choose(a,j)*dp(j,i) for j in range(1,i+1))
+            res.append(cnt%mod)
+        
+        return res
+            
+```
