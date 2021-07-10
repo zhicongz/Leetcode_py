@@ -1,0 +1,41 @@
+639. Decode Ways II
+
+```
+class Solution:
+    def numDecodings(self, s: str) -> int:
+        mod = 10**9+7
+        n = len(s)
+        dp = [0]*(n+1)
+        dp[0] = 1
+        
+        for i in range(n):
+            ## one digit
+            if s[i] == '*':
+                dp[i+1] = dp[i]*9
+            elif s[i] != '0':
+                dp[i+1] = dp[i]
+            ## two digits
+            if i==0: continue
+            if s[i-1] == '*':
+                if s[i] == '*':
+                    dp[i+1] += dp[i-1]*15
+                elif s[i] <= '6':
+                    dp[i+1] += dp[i-1]*2
+
+                else:
+                    dp[i+1] += dp[i-1]
+            elif s[i-1] == '1':
+                if s[i] == '*': 
+                    dp[i+1] += dp[i-1]*9
+                else: 
+                    dp[i+1] += dp[i-1]
+            elif s[i-1] == '2':
+                if s[i] == '*':
+                    dp[i+1] += dp[i-1]*6
+                elif s[i] <= '6':
+                    dp[i+1] += dp[i-1]
+            dp[i+1] %=mod
+        
+        #print(dp)
+        return dp[-1]
+```
