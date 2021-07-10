@@ -1,0 +1,20 @@
+1922. Count Good Numbers
+
+compute results on 2 to the powers. Then multiple results to get the finial number.
+
+```
+class Solution:
+    def countGoodNumbers(self, n: int) -> int:
+        mod = 10**9+7
+        stack = [5,20]
+        while 2**len(stack) <= n:
+            stack.append((stack[-1]**2)%mod)
+        
+        res = 1
+        x = bin(n)[2:]
+        for i,e in enumerate(x[::-1]):
+            if e == "1":
+                res= (res*stack[i])%mod
+            
+        return res%mod
+```
