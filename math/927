@@ -1,0 +1,34 @@
+927. Three Equal Parts
+
+You are given an array arr which consists of only zeros and ones, divide the array into three non-empty parts such that all of these parts represent the same binary value.
+
+O(n^2). Check the first and the last segments. Then check if the middle one equals to those two.
+```
+class Solution:
+    def threeEqualParts(self, arr: List[int]) -> List[int]:
+        # remove leading 0
+        cnt = 0
+        while arr and arr[0]==0:
+            arr.pop(0)
+            cnt += 1
+        if not arr: return [0,2] ## all 0
+        if len(arr) <3: return [-1,-1]
+        
+        n = len(arr)
+        s = [] # the last piece starts from 1, not result
+        for j in range((2*n+2)//3,n):           
+            if all(arr[i]==arr[i+j] for i in range(n-j)):
+                s.append(j)
+        
+        # i = n-j
+        for j in s:
+            i = n-j
+            a = i
+            while arr[a] == 0: 
+                a += 1
+                if a+n-j==j:break
+
+            if arr[:i] == arr[a:a+n-j] and all(e == 0 for e in arr[a+n-j:j]):
+                return [i-1+cnt,a+n-j+cnt]
+        return [-1,-1]
+```
