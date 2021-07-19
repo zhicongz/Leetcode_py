@@ -1,0 +1,39 @@
+235. Lowest Common Ancestor of a Binary Search Tree
+
+If not BST, dfs find the path from root to two nodes, binary search on LCA
+```
+pp,pq = [],[]
+path = []
+def dfs(node):
+    if not node: return
+    path.append(node)
+    dfs(node.left)
+    dfs(node.right)
+    if node == p: pp.extend(path)
+    if node == q: pq.extend(path)
+    path.pop()
+    return
+dfs(root)
+
+a,b = len(pp),len(pq)
+if a>b: 
+    pp,pq = pq,pp
+pp = pp[:len(pq)]
+
+lb,ub = 0,len(pp)-1
+while lb<ub:
+    temp = (lb+ub+1)//2
+    if pp[temp] == pq[temp]:
+        lb = temp
+    else:
+        ub = temp-1
+
+return pp[lb]
+```
+
+If BST, find the first value that is between A and B 
+```
+while (root.val - p.val) * (root.val - q.val) > 0:
+    root = (root.left, root.right)[p.val > root.val]
+return root
+```
