@@ -1,0 +1,38 @@
+126. Word Ladder II
+
+First create a dict stores the connected words.
+Second create the graph
+Then BFS on the graph
+
+```
+class Solution:
+    def findLadders(self, beginWord: str, endWord: str, wordList: List[str]) -> List[List[str]]:
+        wordList = set(wordList)
+        if endWord not in wordList: return []
+        wordList.add(beginWord)
+        
+        pat = collections.defaultdict(set)
+        for word in wordList:
+            for i in range(len(word)):
+                pat[word[:i]+'*'+word[i+1:]].add(word)
+        
+        edges = collections.defaultdict(set)
+        for k in pat.values():
+            for node in k:
+                edges[node] |= k
+        
+        seen,stack = {beginWord},[[beginWord]]
+        res = []
+        while stack and not res:
+            nxt,used = [],set()
+            for path in stack:
+                for node in edges[path[-1]]:
+                    if node not in seen:
+                        if node == endWord: res.append(path+[node])
+                        used.add(node)
+                        nxt.append(path+[node])
+            stack = nxt
+            seen|=used
+        
+        return res
+```
