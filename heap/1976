@@ -1,0 +1,35 @@
+1976.Number of Ways to Arrive at Destination
+
+You are given an integer n and a 2D integer array roads where roads[i] = [ui, vi, timei] means that there is a road between intersections ui and vi 
+that takes timei minutes to travel. You want to know in how many ways you can travel from intersection 0 to intersection n - 1 in the shortest amount of time.
+
+
+```
+class Solution:
+    def countPaths(self, n: int, roads: List[List[int]]) -> int:
+        mod = 10**9+7
+        edge = collections.defaultdict(dict)
+        for [a,b,t] in roads:
+            edge[a][b] = t
+            edge[b][a] = t
+        time = [[0,1]]+[[float('inf'), 0] for _ in range(n-1)] ## [min time to a node, # of ways]
+        
+        # heap
+        h = [[0,0]] # [time,node]
+        while h:
+            [t,node] = heapq.heappop(h)
+            for nxt in edge[node]:
+                if t+edge[node][nxt] > time[nxt][0]:
+                    continue
+                elif t+edge[node][nxt] < time[nxt][0]:
+                    time[nxt] = [t+edge[node][nxt], time[node][1]]
+                    heapq.heappush(h, [t+edge[node][nxt], nxt])    
+                else: ##t+edge[node][nxt] == time[nxt][0]
+                    time[nxt][1] += time[node][1]
+
+        return time[-1][-1]%mod
+```
+
+Thoughts:
+heap for upgrading status by time/cost
+A list to save the optimal status. If heap's status is worse than optimal status, pop the current status.
