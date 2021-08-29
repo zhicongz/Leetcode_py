@@ -1,0 +1,12 @@
+1987. Number of Unique Good Subsequences
+
+```
+class Solution:
+    def numberOfUniqueGoodSubsequences(self, binary: str) -> int:
+        mod = 10**9+7
+        dp = [0,0]
+        for lt in binary:
+            dp[int(lt)] = (sum(dp)+int(lt))%mod
+        
+        return sum(dp)%mod
+```
