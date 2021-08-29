@@ -1,0 +1,46 @@
+1986. Minimum Number of Work Sessions to Finish the Tasks
+
+
+```
+class Solution:
+    def minSessions(self, tasks: List[int], sessionTime: int) -> int:
+        n = len(tasks)
+        tasks.sort(reverse = True)
+        s = [[0,[],0]] ## [#of used sessions, [sessions], next task]
+        while s[0][2]!=n:
+            [cnt, ss, i] = heapq.heappop(s)
+            for j in range(len(ss)):
+                if ss[j] <= sessionTime-tasks[i]:
+                    heapq.heappush(s,[cnt,ss[:j]+[ss[j]+tasks[i]]+ss[j+1:],i+1])
+            heapq.heappush(s,[cnt+1, ss+[tasks[i]], i+1])
+            
+        
+        return s[0][0]
+```
+use heap to find the min number to given task i. (brute force)
+If sort, it takes 100ms. O.W., it takes 4000ms
+The worst case is O(n!), but never be able to obtain
+```
+class Solution:
+    def minSessions(self, tasks: List[int], sessionTime: int) -> int:
+        n = len(tasks)
+        @lru_cache(2**14)
+        def foo(mask): ## return [# of sessions, used in last session]
+            if mask == 0: return [1,0]
+            res = [float('inf')]*2
+            for i in range(n):
+                if (1<<i) & mask != 0:
+                    [cnt,used] = foo(mask-(1<<i))
+                    if used + tasks[i]<=sessionTime:
+                        used += tasks[i]
+                    else:
+                        cnt += 1
+                        used = tasks[i]
+                    
+                    res = min(res, [cnt,used])
+                        
+            return res
+            
+        return foo((1<<n)-1)[0]
+```
+dp O(2^n*n)
