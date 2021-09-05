@@ -1,0 +1,45 @@
+1998. GCD Sort of an Array
+
+You are given an integer array nums, and you can perform the following operation any number of times on nums:
+
+Swap the positions of two elements nums[i] and nums[j] if gcd(nums[i], nums[j]) > 1 where gcd(nums[i], nums[j]) is the greatest common divisor of nums[i] and nums[j].
+Return true if it is possible to sort nums in non-decreasing order using the above swap method, or false otherwise.
+
+```
+class Solution:
+    def gcdSort(self, nums: List[int]) -> bool:
+        n,mx = len(nums), max(nums)+1
+        
+        s = list(range(mx))
+        size = [1]*mx
+        
+        def union(a,b):
+            if find(a) != find(b):
+                if size[find(a)] > size[find(b)]:
+                    s[find(b)] = find(a)
+                    size[find(a)] += size[find(b)]
+                else:
+                    s[find(a)] = find(b)
+                    size[find(b)] += size[find(a)]
+                
+        def find(a):
+            if a != s[a]:
+                s[a] = find(s[a])
+            return s[a]
+            
+        seen = set(nums)
+        
+        # modified sieve of eratosthenes
+        sieve = [1]*(mx)
+        sieve[0] = sieve[1] = 0
+        for k in range(mx//2 + 1): 
+            if sieve[k]: 
+                for x in range(2*k, mx, k): 
+                    sieve[x] = 0
+                    if x in seen: union(k, x)
+        
+            
+        return all(find(i)==find(j) for i,j in zip(nums,sorted(nums)))
+```
+UnionFind: numbers in the same group
+sieve: fast find prime numbers
