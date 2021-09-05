@@ -1,0 +1,40 @@
+834. Sum of Distances in Tree
+
+There is an undirected connected tree with n nodes labeled from 0 to n - 1 and n - 1 edges.
+
+You are given the integer n and the array edges where edges[i] = [ai, bi] indicates that there is an edge between nodes ai and bi in the tree.
+
+Return an array answer of length n where answer[i] is the sum of the distances between the ith node in the tree and all other nodes.
+
+```
+class Solution:
+    def sumOfDistancesInTree(self, n: int, edges: List[List[int]]) -> List[int]:        
+        d = collections.defaultdict(set)
+        for [a,b] in edges:
+            d[a].add(b)
+            d[b].add(a)
+        
+        cnt = collections.Counter()
+        dist = collections.Counter()
+        def dfs_cnt(i):
+            cnt[i] = 1
+            dist[i] = 0
+            for j in d[i]:
+                if j not in cnt:
+                    dfs_cnt(j)
+                    cnt[i] += cnt[j]
+                    dist[i] += dist[j]+cnt[j] # sum of distance of subtree with node i
+        dfs_cnt(0)
+        
+        res = [0]*n
+        res[0] = dist[0]
+        def dfs_res(i):
+            for j in d[i]:
+                if res[j] == 0:
+                    res[j] = res[i] + n - 2*cnt[j]
+                    dfs_res(j)
+        dfs_res(0)    
+        
+        return res
+```
+use dfs twice. First time saves distance and number of nodes in the subtree. The second time compute the distance.
