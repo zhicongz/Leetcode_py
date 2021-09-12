@@ -1,0 +1,49 @@
+882. Reachable Nodes In Subdivided Graph
+
+```
+class Solution:
+    def reachableNodes(self, edges: List[List[int]], maxMoves: int, n: int) -> int:
+        edge = {i:collections.Counter() for i in range(n)}
+        for [a,b,cnt] in edges:
+            edge[a][b] = cnt
+            edge[b][a] = cnt
+        
+        seen1,seen2 = set(),collections.Counter()
+        
+        h = [[0,0]] # [moved, node]
+        
+        while h:
+            [move, node] = heapq.heappop(h)
+            if node in seen1: continue
+            seen1.add(node)
+            for nxt in edge[node]:
+                seen2[(node,nxt)] = min(edge[node][nxt] - seen2[(nxt,node)], maxMoves - move)
+                if move + edge[node][nxt] + 1 <= maxMoves:
+                    heapq.heappush(h, [move + edge[node][nxt] + 1, nxt])
+            
+        return sum(i!=-1 for i in seen1) + sum(seen2.values())
+```
+Use heap find the min moved node every time.
+
+```
+class Solution:
+    def reachableNodes(self, edges: List[List[int]], maxMoves: int, n: int) -> int:
+        edge = {i:collections.Counter() for i in range(n)}
+        for [a,b,cnt] in edges:
+            edge[a][b] = cnt
+            edge[b][a] = cnt
+        
+        seen1,seen2 = [-1]*n,collections.Counter()
+        
+        def dfs(node,move):
+            if move <= seen1[node]: return
+            seen1[node] = move
+            for nxt in edge[node]:
+                seen2[(node,nxt)] = min(edge[node][nxt] - seen2[(nxt,node)], move)
+                if move > edge[node][nxt]:         
+                    dfs(nxt, move-edge[node][nxt]-1)
+                
+        dfs(0,maxMoves)
+        return sum(i!=-1 for i in seen1) + sum(seen2.values())
+```
+TLE. repeated visit same node with larger move number
