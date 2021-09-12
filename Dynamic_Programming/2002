@@ -1,0 +1,36 @@
+2002. Maximum Product of the Length of Two Palindromic Subsequences
+
+```
+class Solution:
+    def maxProduct(self, s: str) -> int:
+        n = len(s)
+        status = [0]*(1<<n)
+        
+        for i in range(1<<n):
+            stack = ''
+            idx = []
+            for j in range(n):
+                if i&(1<<j) == 1<<j:
+                    idx.append(j)
+                    stack += s[j]
+            #if i == 6: print(stack)
+            if stack == stack[::-1]:
+                status[i] = len(stack)         
+            
+            for j in idx:
+                status[i] = max(status[i], status[i-(1<<j)])
+            
+            
+        # for i,e in enumerate(status):
+        #     if e!=0:print(i,e)
+        
+        
+        res = 0
+        for i in range(1<<n):
+            j = (1<<n)-i-1
+            res = max(res, status[i]*status[j])
+        
+        return res
+```
+
+dp[mask]: longest palindromic subsequences that only use non-zero bits in mask
