@@ -1,0 +1,27 @@
+2014. Longest Subsequence Repeated k Times
+
+```
+class Solution:
+    def longestSubsequenceRepeatedK(self, s: str, k: int) -> str:
+        # max possible candidates
+        c = sum([[key]*(v//k) for key,v in collections.Counter(s).items()], [])
+        
+        # generate all possible candidates
+        comb = {''}
+        for lt in c:
+            comb |= {cur[:i]+lt+cur[i:] for cur in comb for i in range(len(cur)+1)}
+        
+        def isSubsequence(s, t):
+            t = iter(t)
+            return all(c in t for c in s)
+        
+        for sub in sorted(list(comb), key = lambda x: (len(x),x), reverse = True):
+            if isSubsequence(sub*k,s):
+                return sub
+            
+```
+When k=2, repeated subsequence can be done by LCS (longest common subsequence), O(n^2).
+Similarly, LCS can be applied with complexity O(n^k). 
+Here, as the answer is shorter than 8, we can list all possible results and test one by one.
+There are 7!(1+1/2!+1/3!+..+1/6!) = 13700 candidates. Each with length 1000
+
