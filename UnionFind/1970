@@ -1,0 +1,40 @@
+1970. Last Day Where You Can Still Cross
+
+```
+class Solution:
+    def latestDayToCross(self, row: int, col: int, cells: List[List[int]]) -> int:
+        # if water 8 dirs connect from left most to right most, can't pass
+        # union-find. originally, label[i][j] = (j,j)
+        
+        s = {(i,j):(i,j) for i in range(row) for j in range(col)}
+        label = {(i,j):(j,j) for i in range(row) for j in range(col)}
+        seen = set()
+        
+        def find(pt):
+            if pt!=s[pt]:
+                s[pt] = find(s[pt])
+            return s[pt]
+        
+        def union(pt1,pt2):
+            (x1,y1) = find(pt1)
+            (x2,y2) = find(pt2)
+            s[(x2,y2)] = (x1,y1)
+            label[(x1,y1)] = (min(label[(x2,y2)][0],label[(x1,y1)][0]),max(label[(x2,y2)][1],label[(x1,y1)][1]))
+        
+        for i, [x,y] in enumerate(cells):
+            x -= 1
+            y -= 1
+            for dx in [-1,0,1]:
+                for dy in [-1,0,1]:
+                    if (x+dx,y+dy) in seen:
+                        union((x,y),(x+dx,y+dy))  
+            seen.add((x,y))           
+            (ymin,ymax) = label[find((x,y))]
+            if ymin == 0 and ymax == col-1:
+                return i
+            # print(x,y)
+            # print(s)
+            # print(label)
+            # print('------------')
+        return len(cells)
+```
