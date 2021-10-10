@@ -1,0 +1,30 @@
+Partition to K Equal Sum Subsets
+
+```
+class Solution:
+    def canPartitionKSubsets(self, nums: List[int], k: int) -> bool:
+        m = sum(nums)
+        if m%k!=0: return False
+        t = m//k
+        ## two steps, first find all combinations sum to t, then select k disjoint combinations
+        comb = []
+        
+        def dfs(rmd,mask,i):
+            if i == len(nums) or rmd > t: return
+            if rmd + nums[i] == t:
+                comb.append(mask|(1<<i))
+            dfs(rmd,mask,i+1)
+            dfs(rmd+nums[i], mask|(1<<i), i+1)
+            
+        dfs(0,0,0)
+        
+        dp = [[0]*(1<<len(nums)) for _ in range(len(comb)+1)]
+        for i in range(len(comb)):
+            for j in range(1<<len(nums)):
+                dp[i+1][j] = max(dp[i][j],dp[i+1][j])
+                if j & comb[i] == 0:
+                    dp[i+1][j|comb[i]] = max(dp[i][j] + 1, dp[i][j|comb[i]])
+        
+        return dp[-1][-1] == k
+```
+This is a solution but not optimized.. runtime 3784 ms
