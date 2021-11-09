@@ -1,0 +1,38 @@
+1178. Number of Valid Words for Each Puzzle
+
+With respect to a given puzzle string, a word is valid if both the following conditions are satisfied:
+word contains the first letter of puzzle.
+For each letter in word, that letter is in puzzle.
+For example, if the puzzle is "abcdefg", then valid words are "faced", "cabbage", and "baggage", while
+invalid words are "beefed" (does not include 'a') and "based" (includes 's' which is not in the puzzle).
+Return an array answer, where answer[i] is the number of words in the given word list words that is valid with respect to the puzzle puzzles[i].
+
+```
+class Solution:
+    def findNumOfValidWords(self, words: List[str], puzzles: List[str]) -> List[int]:
+        stack = collections.defaultdict(dict)
+        for w in words:
+            s = set(w)
+            if len(s) > 7: continue ## puzzle has at most 7 letters
+            total = sum(1<<ord(l)-97 for l in s)
+            for l in s:
+                r = total - (1<<ord(l)-97)
+                if r not in stack[l]: stack[l][r] = 0
+                stack[l][r] += 1  
+        
+        res = []
+        for p in puzzles:
+            cand = {0}
+            for l in p[1:]:
+                cand |= {i+(1<<ord(l)-97) for i in cand} 
+            res.append(sum(stack[p[0]].get(mask,0) for mask in cand))
+            
+        return res
+```
+
+length of each puzzle is 7. First letter must in word, so number of combination need to search is just $2^6$.
+Each word can have at most 7 different letter, so there are at most 7 different leading letters.
+When build up the bridge: word -> at most 7 different leading letter with remaining letters masked as sum
+When search: puzzle -> at most 64 different combinations with a given leading letter
+complexity: O(m+n) 
+
