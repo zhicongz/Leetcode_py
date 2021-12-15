@@ -1,0 +1,28 @@
+2097. Valid Arrangement of Pairs
+
+```
+class Solution:
+    def validArrangement(self, pairs: List[List[int]]) -> List[List[int]]:
+        d = collections.Counter()
+        edge = collections.defaultdict(list)
+        for [a,b] in pairs:
+            d[a] += 1
+            d[b] -= 1
+            edge[a].append(b)
+        
+        for pre in d:
+            if d[pre] == 1:
+                break
+        
+        res = []
+        
+        def dfs(cur):
+            while edge[cur]:
+                nxt = edge[cur].pop()
+                dfs(nxt)
+                res.append([cur,nxt])   
+        dfs(pre)
+        
+        return res[::-1]
+```
+Everytime, append the pairs that can't move forward based on current visited nodes.
