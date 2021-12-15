@@ -1,0 +1,28 @@
+2101. Detonate the Maximum Bombs
+
+```
+class Solution:
+    def maximumDetonation(self, bombs: List[List[int]]) -> int:
+        n = len(bombs)
+        
+        def dist(x,y):
+            return (x[0]-y[0])**2 + (x[1]-y[1])**2 <= x[2]**2
+        
+        edge = collections.defaultdict(set)
+        for i in range(n):
+            for j in range(n):
+                if dist(bombs[i],bombs[j]): edge[i].add(j)
+        
+        
+        def dfs(i):
+            seen.add(i)
+            return sum(dfs(k) for k in edge[i] if k not in seen) + 1
+        
+        res = 0
+        for i in range(n):
+            seen = set()
+            res = max(res,dfs(i))         
+        
+        return res
+```
+DFS starts from each bomb, recording the maximum total number of detonated bombs
