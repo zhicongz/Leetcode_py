@@ -1,0 +1,49 @@
+2127. Maximum Employees to Be Invited to a Meeting
+```
+class Solution:
+    def maximumInvitations(self, favorite: List[int]) -> int:
+        seen = {} ##{index: [length of circle, distance to circel, node connect to circle]}
+        
+        for cur,nxt in enumerate(favorite):
+            if cur not in seen:
+                link = {cur:0} 
+                ## dfs to link the nodes
+                while nxt not in seen and nxt not in link:
+                    link[nxt] = link[cur] + 1
+                    cur,nxt = favorite[cur],favorite[nxt]
+                ## nxt is a visited points by other dfs
+                if nxt in seen:
+                    [size,dist,node] = seen[nxt]
+                    for key in link:
+                        seen[key] = [size, dist+len(link)-link[key],node]
+                else: ## self circle
+                    size = len(link)-link[nxt] ## size of the circel in current dfs
+                    for key in link:
+                        if max(0,len(link)-link[key]-size) == 0:
+                            seen[key] = [size, max(0,len(link)-link[key]-size), key]
+                        else:
+                            seen[key] = [size, max(0,len(link)-link[key]-size), nxt]
+
+        temp = collections.Counter()
+        for [a,b,node] in seen.values():
+            if a == 2:
+                temp[node] = max(temp[node], b)
+        
+        res2,res3p = 0,0
+        cnt = set()
+        for k in seen:
+            [a,b,node] = seen[k]
+            if a == 2 and node not in cnt:
+                res2 += a + temp[node] + temp[favorite[node]]
+                cnt.add(node)
+                cnt.add(favorite[node])
+            res3p = max(res3p,a)
+
+        return max(res2,res3p)
+```
+steps:
+1. dfs to connet the nodes
+2. each dfs eventually will fall into a circle
+3. the final result comes from one of two cases:
+  a. one large circle
+  b. sum of all the connected nodes with circel size == 2
